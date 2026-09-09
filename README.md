@@ -50,10 +50,10 @@ becomes available when you mount the provided
 ### From the git checkout (pre-publish / development)
 
 ```bash
-git clone git@github.com:hy-sde/dsh-tool-debug.git
-cd dsh-tool-debug
+git clone git@github.com:hy-sde/dsh-plugins.git
+cd dsh-plugins
 pnpm install
-pnpm -r build
+pnpm --filter @hy-sde-org/dsh-tool-debug build
 # symlink both packages into your harness's plugin lookup
 dsh plugin --profile web link ../dsh-tool-debug/packages/tool-debug
 ```
