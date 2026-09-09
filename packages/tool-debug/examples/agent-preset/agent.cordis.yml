@@ -1,0 +1,50 @@
+# User agent preset for @hy-sde-org/dsh-tool-debug — "agents get a real DAP
+# debugger".
+#
+# Install: copy this directory to ~/.dsh/.agent-presets/<id>/ (pick any id),
+# then select the preset in the Web UI preset picker (or `dsh agent` CLI).
+#
+# Structure: the `dap` service lives in an entry-local realm (isolate:
+# dap) so each mounted session owns its adapter processes and captured
+# output; tool-debug sits beside it and resolves `ctx.dap` from that realm.
+# The DAP adapters themselves are local binaries (debugpy / dlv / lldb-dap /
+# gdb...) resolved at runtime; no separate provider package is needed.
+#
+# Copy any other rows from the preset you normally use (bash, todo, ask-user,
+# skills, ...) next to these; only the debugging rows are special.
+
+- id: persona
+  name: '@deepseek-ai/dsh-persona'
+  config:
+    text: >-
+      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.
+      Debug code with the `debug` tool, which attaches or launches a real
+      debugger (debugpy, lldb-dap, gdb, dlv, ...): set source/function/
+      instruction/data breakpoints, continue/pause/step, read stack
+      frames/scopes/variables, evaluate expressions, disassemble, read/write
+      memory, list modules and loaded sources, and send custom debugger
+      requests. One live debug session at a time; terminate it before
+      launching another.
+
+- id: agent-instructions
+  name: '@deepseek-ai/dsh-agent-instructions'
+  config:
+    maxBytes: 65536
+
+# DAP capability seam + the model-facing debug tool. The seam's realm means
+# adapter processes and breakpoint state belong to this session alone.
+- id: debug
+  name: cordis:group
+  group: true
+  isolate:
+    dap: true
+  config:
+    - id: dap
+      name: '@hy-sde-org/dsh-dap'
+
+    - id: tool-debug
+      name: '@hy-sde-org/dsh-tool-debug'
+      config:
+        maxResultChars: 16000
+        requestTimeoutSec: 30
+        timeoutMs: 120000

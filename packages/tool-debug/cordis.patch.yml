@@ -1,0 +1,18 @@
+# @hy-sde-org/dsh-tool-debug — install surface for the `debug` tool.
+#
+# DeepSeek Harness has no stock `debug` tool: unlike the edit stack (which
+# shadows the built-in `str_replace_editor`/`edit`), nothing on the official
+# releases collides with the `debug` name. The bundle therefore stays out of
+# the way and inserts no rows and disables nothing: installing this package
+# alone never changes a profile's behavior and never breaks boot.
+#
+# The tool mounts at the AGENT plane — one row in a user agent preset — where
+# its scoped `debug` becomes available alongside the deployment's other tools.
+# See the README "Example preset" section and `examples/agent-preset/` in this
+# package for the ready-to-copy preset (it mounts the `dap` service in a
+# per-session realm plus the `tool-debug` row beside it).
+#
+# Nothing to patch on stock releases — the layer is the empty list below
+# (an absent list would fail stock's top-level-YAML-array check at boot).
+
+[]

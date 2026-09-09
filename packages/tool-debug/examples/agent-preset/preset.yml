@@ -1,0 +1,3 @@
+name: Debug Mode (real DAP)
+description: Coding agent with a real DAP debugger — launch/attach debugpy, lldb-dap, gdb, or dlv; breakpoints, stepping, frames/locals, evaluate, memory, modules.
+order: 6
