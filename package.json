@@ -1,6 +1,6 @@
 {
   "name": "dsh-tool-debug",
-  "version": "0.1.2-rc.1",
+  "version": "0.1.5-rc.1",
   "private": true,
   "description": "Standalone public packages: @hy-sde-org/dsh-dap (the DAP debug engine) and @hy-sde-org/dsh-tool-debug (the `debug` tool plugin for DeepSeek Harness).",
   "type": "module",

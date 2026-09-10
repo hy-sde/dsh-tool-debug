@@ -177,7 +177,6 @@ function spawnHandle(spec: SubprocessSpawnSpec, scriptPath: string): SubprocessH
     child.on('close', (code, signal) => { resolve({ exitCode: code ?? 0, signal: signal ?? null }) })
   })
   return {
-    pid: child.pid ?? -1,
     stdin: child.stdin ?? undefined,
     stdout: child.stdout ?? undefined,
     stderr: child.stderr ?? undefined,

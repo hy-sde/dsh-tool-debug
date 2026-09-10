@@ -1747,7 +1747,10 @@ export class DapSessionManager {
       if (proc.stdin) {
         proc.stdin.end()
       }
-      return { processId: proc.pid, shellProcessId: proc.pid } satisfies DapRunInTerminalResponse
+      // The post-0.1.5 SubprocessHandle deliberately does not publish a pid
+      // (process identity belongs to the spawn provider); both response fields
+      // are optional, so the client falls back to port-based attach.
+      return {} satisfies DapRunInTerminalResponse
     })
     client.onReverseRequest('startDebugging', async (rawArgs) => {
       const startArgs = (rawArgs ?? {}) as Partial<DapStartDebuggingArguments>
