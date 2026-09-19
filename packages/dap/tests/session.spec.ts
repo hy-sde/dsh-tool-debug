@@ -180,6 +180,7 @@ function spawnHandle(spec: SubprocessSpawnSpec, scriptPath: string): SubprocessH
     stdin: child.stdin ?? undefined,
     stdout: child.stdout ?? undefined,
     stderr: child.stderr ?? undefined,
+    control: undefined,
     collected: {
       stderr: {
         readFrom(fromByte: number) {
