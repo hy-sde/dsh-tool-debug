@@ -1,6 +1,6 @@
 {
   "name": "dsh-tool-debug",
-  "version": "0.1.6-alpha.2",
+  "version": "0.1.7-rc.2",
   "private": true,
   "description": "Standalone public packages: @hy-sde-org/dsh-dap (the DAP debug engine) and @hy-sde-org/dsh-tool-debug (the `debug` tool plugin for DeepSeek Harness).",
   "type": "module",
@@ -16,7 +16,7 @@
     "release:publish": "bash scripts/release-public.sh --publish"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/cordis": "~4.0.4",
     "@types/node": "^24.13.3",
     "typescript": "^5.9.3",
     "vitest": "^3.2.7"
