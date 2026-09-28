@@ -25,6 +25,7 @@ import type {
   DapResponseMessage,
 } from './types.ts'
 import type { SubprocessHandle, SubprocessSpawnSpec } from '@deepseek-ai/dsh-subprocess'
+import { Deferred, Effect, Scheduler } from 'effect'
 
 /** Write surface accepted by the message path (subprocess stdin or a net socket). */
 export interface DapWriteSink {
@@ -53,6 +54,14 @@ const DEFAULT_REQUEST_TIMEOUT_MS = 30_000
 const WRITE_MESSAGE_TIMEOUT_MS = 30_000
 /** Default wait for socket-mode adapters to become reachable. */
 const SOCKET_READY_TIMEOUT_MS = 10_000
+
+/**
+ * Effect's default scheduler dispatches on `setImmediate`; the sync scheduler
+ * dispatches on `queueMicrotask`, which vitest's fake timers do not mock. The
+ * fork's tests use fake timers heavily, so every plugin-side Effect runtime
+ * must pin the sync scheduler or cancel-without-advancing tests deadlock.
+ */
+const syncScheduler = new Scheduler.MixedScheduler('sync')
 
 function toErrorMessage(value: unknown): string {
   if (value instanceof Error) return value.message
@@ -330,55 +339,81 @@ export class DapClient {
       command,
       arguments: args,
     }
-    const { promise, resolve, reject } = Promise.withResolvers<TBody>()
-    // Suppress "unhandled rejection" if the request timer or abort fires
-    // before the caller's `await` subscribes — e.g. while #writeMessage is
-    // still racing a wedged stdin flush. The caller's own `await` still
-    // receives the rejection normally; this handler is a passive guard.
-    promise.catch(() => {})
-
-    const timeout = setTimeout(() => {
-      if (!this.#pendingRequests.has(requestSeq)) return
-      this.#pendingRequests.delete(requestSeq)
-      cleanup()
-      reject(new Error(`DAP request ${command} timed out after ${timeoutMs}ms`))
-    }, timeoutMs)
-    const cleanup = () => {
-      clearTimeout(timeout)
-      if (signal) {
-        signal.removeEventListener('abort', abortHandler)
-      }
+    // `Effect.gen` takes a `function*`, which does not close over the class
+    // `this`; capture the internals as locals/arrows instead of aliasing this.
+    const pendingRequests = this.#pendingRequests
+    const writeMessage = (message: DapRequestMessage | DapResponseMessage): Promise<void> =>
+      this.#writeMessage(message)
+    const touch = (): void => {
+      this.#lastActivity = Date.now()
     }
-    const abortHandler = () => {
-      this.#pendingRequests.delete(requestSeq)
-      cleanup()
-      reject(signal?.reason instanceof Error ? signal.reason : new Error('Debug operation aborted'))
-    }
-    if (signal) {
-      signal.addEventListener('abort', abortHandler, { once: true })
-    }
-    this.#pendingRequests.set(requestSeq, {
-      command,
-      resolve: (body) => {
-        cleanup()
-        resolve(body as TBody)
-      },
-      reject: (error) => {
-        cleanup()
-        reject(error)
-      },
-    })
-    this.#lastActivity = Date.now()
-    // Fire the write in the background. Awaiting it here would let a wedged
-    // stdin flush block the caller's `timeoutMs`; if it fails, propagate the
-    // failure into `promise` — the timer or abort may still win the race.
-    void this.#writeMessage(request).catch((error: unknown) => {
-      if (!this.#pendingRequests.has(requestSeq)) return
-      this.#pendingRequests.delete(requestSeq)
-      cleanup()
-      reject(error)
-    })
-    return promise
+    return await Effect.runPromise(
+      Effect.scoped(
+        Effect.gen(function*() {
+          // The request timeout, the abort forwarder, and the pending-entry
+          // correlation are scope-owned: the release finalizer clears the
+          // timer, detaches the listener, and drops the pending entry on
+          // every exit path (response, timeout, abort, write failure,
+          // disposal) — replacing the hand-rolled cleanup() closure with its
+          // two call sites. In-flight request results still travel through
+          // the #pendingRequests map (the reader and dispose paths), which
+          // now completes a Deferred instead of a promise; the Deferred's
+          // failure carries the original Error object by identity, so the
+          // facade rethrows exactly what the adapter/transport produced.
+          const deferred = yield* Deferred.make<TBody, Error>()
+          yield* Effect.acquireRelease(
+            Effect.sync(() => {
+              const settleFailure = (error: Error): void => {
+                pendingRequests.delete(requestSeq)
+                Deferred.doneUnsafe(deferred, Effect.fail(error))
+              }
+              const timer = setTimeout(() => {
+                if (!pendingRequests.has(requestSeq)) return
+                settleFailure(new Error(`DAP request ${command} timed out after ${timeoutMs}ms`))
+              }, timeoutMs)
+              const onAbort = (): void => {
+                if (!pendingRequests.has(requestSeq)) return
+                settleFailure(
+                  signal?.reason instanceof Error ? signal.reason : new Error('Debug operation aborted'),
+                )
+              }
+              if (signal !== undefined) {
+                signal.addEventListener('abort', onAbort, { once: true })
+              }
+              pendingRequests.set(requestSeq, {
+                command,
+                resolve: (body) => {
+                  Deferred.doneUnsafe(deferred, Effect.succeed(body as TBody))
+                },
+                reject: (error) => {
+                  Deferred.doneUnsafe(deferred, Effect.fail(error))
+                },
+              })
+              touch()
+              // Fire the write in the background. Awaiting it here would let
+              // a wedged stdin flush block the caller's `timeoutMs`; if it
+              // fails, propagate the failure into the deferred — the timer or
+              // abort may still win the race. The Deferred subscribe happens
+              // synchronously in the fiber before this write can settle, so
+              // no settlement is ever dropped as an unhandled rejection.
+              void writeMessage(request).catch((error: unknown) => {
+                if (!pendingRequests.has(requestSeq)) return
+                settleFailure(error instanceof Error ? error : new Error(String(error)))
+              })
+              return { timer, onAbort }
+            }),
+            armed =>
+              Effect.sync(() => {
+                clearTimeout(armed.timer)
+                signal?.removeEventListener('abort', armed.onAbort)
+                pendingRequests.delete(requestSeq)
+              }),
+          )
+          return yield* Deferred.await(deferred)
+        }),
+      ),
+      { scheduler: syncScheduler },
+    )
   }
 
   /** Send a response to an adapter request.
