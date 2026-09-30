@@ -1,6 +1,6 @@
 {
   "name": "@hy-sde-org/dsh-dap",
-  "version": "0.1.7-rc.2",
+  "version": "0.2.0-rc.2",
   "description": "Debug Adapter Protocol (DAP) capability seam for the DeepSeek Harness \u2014 adapter resolution, and a session manager that launches/attaches, sets breakpoints, steps, lists threads and stack frames, reads scopes and variables, and evaluates expressions through spawned DAP adapters (debugpy, lldb-dap, gdb, dlv, ...).",
   "type": "module",
   "main": "./dist/index.js",
@@ -42,17 +42,17 @@
   "license": "MIT",
   "peerDependencies": {
     "@deepseek-ai/cordis": "~4.0.4",
-    "@deepseek-ai/dsh-invariants": "^0.1.7-rc.2",
-    "@deepseek-ai/dsh-subprocess": "^0.1.7-rc.2"
+    "@deepseek-ai/dsh-invariants": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-subprocess": "^0.2.0-rc.2"
   },
   "dependencies": {
     "effect": "4.0.0-rc.118"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "~4.0.4",
-    "@deepseek-ai/dsh-invariants": "^0.1.7-rc.2",
-    "@deepseek-ai/dsh-subprocess": "^0.1.7-rc.2",
-    "@deepseek-ai/dsh-subprocess-local": "^0.1.7-rc.2",
+    "@deepseek-ai/dsh-invariants": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-subprocess": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-subprocess-local": "^0.2.0-rc.2",
     "@types/node": "^24.13.3",
     "typescript": "^5.9.3",
     "vitest": "^3.2.7"
