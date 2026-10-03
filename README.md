@@ -1,3 +1,9 @@
+<!-- MIRROR-NOTE:START -->
+> [!NOTE]
+> 📦 This plugin lives in the [**dsh-plugins**](https://github.com/hy-sde/dsh-plugins) monorepo — file issues & pull requests there.
+> npm: [`@hy-sde-org/dsh-dap`](https://www.npmjs.com/package/@hy-sde-org/dsh-dap) · [`@hy-sde-org/dsh-tool-debug`](https://www.npmjs.com/package/@hy-sde-org/dsh-tool-debug)
+<!-- MIRROR-NOTE:END -->
+
 # dsh-tool-debug — a real DAP debugger for DeepSeek Harness
 
 Two standalone packages, installable as **one plugin** for the DeepSeek
