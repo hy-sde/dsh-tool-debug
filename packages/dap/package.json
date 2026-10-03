@@ -36,8 +36,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hy-sde/dsh-plugins.git",
-    "directory": "dsh-tool-debug/packages/dap"
+    "url": "git+https://github.com/hy-sde/dsh-tool-debug.git",
+    "directory": "packages/dap"
   },
   "license": "MIT",
   "peerDependencies": {
@@ -65,5 +65,9 @@
     "debug",
     "dap",
     "debugger"
-  ]
+  ],
+  "homepage": "https://github.com/hy-sde/dsh-tool-debug#readme",
+  "bugs": {
+    "url": "https://github.com/hy-sde/dsh-tool-debug/issues"
+  }
 }
