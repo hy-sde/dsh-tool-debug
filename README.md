@@ -23,11 +23,25 @@ install command, and returns a session snapshot from every operation so the
 agent always sees consistent debugger state. Everything works on stock
 DeepSeek Harness releases with **zero upstream changes**.
 
-**Why this exists.** Coding-agent debugging is mostly harness: a real
-stepping/breakpoints debugger — versus "insert print statements and rerun" —
-is the difference between interrogating a fault and instrumenting around it.
-This plugin ports a proven DAP debugger into the model's tool surface and
-ships it as an installable plugin.
+## Why
+
+Coding-agent debugging is mostly harness: a real stepping/breakpoints debugger —
+versus "insert print statements and rerun" — is the difference between interrogating
+a fault and instrumenting around it. This plugin ports a proven DAP debugger into the
+model's tool surface and ships it as an installable plugin.
+
+## Prerequisites
+
+- Node.js 22.19 or newer (the packages' `engines` floor) with npm and pnpm on `PATH`;
+- a DeepSeek Harness installation including the standard `dsh` CLI — the peer baseline
+  is `@deepseek-ai/cordis ~4.0.4` and `@deepseek-ai/dsh-tools`/`dsh-system-prompt`/
+  `dsh-timeout`/`dsh-invariants` `^0.2.0-rc.2`;
+- at least one debugger adapter for the languages you want to debug, discovered at
+  runtime via `PATH` (debugpy also via `DSH_DEBUGPY_PYTHON`): debugpy
+  (`pip install debugpy`) for Python, lldb-dap or gdb for C/C++/Rust, dlv
+  (`go install github.com/go-delve/delve/cmd/dlv@latest`) for Go, vscode-js-debug for
+  JavaScript/TypeScript. An unavailable adapter is a structured error naming the
+  install command, not a crash.
 
 ## Install
 
@@ -35,11 +49,11 @@ ships it as an installable plugin.
 pnpm install --global @deepseek-ai/dsh
 ```
 
-### Direct from npm (published)
+### Route A — published npm package (recommended)
 
 Both packages are published on the npm registry under the `hy-sde-org`
 organization (`@hy-sde-org/dsh-dap` and `@hy-sde-org/dsh-tool-debug`,
-version `0.1.2-rc.1`). Install the plugin straight from npm — the registry
+version `0.2.0-rc.2`). Install the plugin straight from npm — the registry
 resolves the dap library dependency and the DeepSeek Harness peer packages
 automatically:
 
@@ -53,30 +67,52 @@ the host plane — the harness has no stock `debug` tool to shadow. The tool
 becomes available when you mount the provided
 [agent preset](#giving-agents-the-debug-tool) row.
 
-### From the git checkout (pre-publish / development)
+### Route B — from source (validate this checkout or hack on the plugin)
 
 ```bash
 git clone git@github.com:hy-sde/dsh-plugins.git
 cd dsh-plugins
 pnpm install
-pnpm --filter @hy-sde-org/dsh-tool-debug build
-# symlink both packages into your harness's plugin lookup
-dsh plugin --profile web link ../dsh-tool-debug/packages/tool-debug
+
+DEBUG_TGZ="$(cd dsh-tool-debug/packages/tool-debug && pnpm pack --silent --pack-destination /tmp)"
+dsh plugin --profile web add "$DEBUG_TGZ"
+cd ..
 ```
+
+`prepack` runs the package's clean + build, so the tarball always carries current
+`dist/` for both the dap seam and the tool.
 
 ### Verify
 
 ```bash
-pnpm -r check && pnpm -r test && pnpm -r build
-bash scripts/release-public.sh --check   # clean tree + checks + tests + pack
+dsh web --dump-config
 ```
 
-For the live debugger round trip, point the suite at a Python with
-`debugpy` installed:
+The bundle's patch is a documented no-op — it inserts no rows and disables nothing —
+so installation changes nothing in the composed tree, and nothing `debug`-named
+appears on the host plane; boot is unaffected. The tool exists only for agents whose
+preset mounts the dap + tool-debug rows (see *Giving agents the `debug` tool* below):
+with the preset selected, ask the agent to run `debug` with `action: "sessions"` — an
+empty session list, or a structured "no debugger adapter available" error naming the
+install command, confirms the seam resolves.
 
-```bash
-DSH_DEBUGPY_PYTHON=/path/to/python pnpm --filter @hy-sde-org/dsh-dap test
+### Run
+
+Give agents the preset row (see *Giving agents the `debug` tool* below), then ask the
+agent to debug. One grounded round trip against a Python program with `debugpy`:
+
+```text
+debug { "action": "launch", "program": "server.py", "adapter": "debugpy" }
+debug { "action": "set_breakpoint", "file": "server.py", "line": 42 }
+debug { "action": "continue" }
+debug { "action": "stack_trace" }
+debug { "action": "evaluate", "expression": "len(rows)" }
+debug { "action": "terminate" }
 ```
+
+One active session at a time — terminate before launching another. Breakpoints must
+be set before continuing after a stop; an unavailable adapter is a structured error
+that names the install command, not a crash.
 
 ### Uninstall
 
@@ -134,7 +170,15 @@ terminate · sessions · capabilities
 ```bash
 pnpm install
 pnpm -r check   # typecheck both packages
+pnpm -r test    # framing + session specs + the opt-in live debugpy round trip
 pnpm -r build   # tsc -> dist for both
+bash scripts/release-public.sh --check   # clean tree + checks + tests + pack
+```
+
+For the live debugger round trip, point the suite at a Python with `debugpy` installed:
+
+```bash
+DSH_DEBUGPY_PYTHON=/path/to/python pnpm --filter @hy-sde-org/dsh-dap test
 ```
 
 ## Layout
@@ -157,3 +201,12 @@ packages/tool-debug/   @hy-sde-org/dsh-tool-debug (the `debug` tool plugin)
 
 See `THIRD-PARTY-NOTICES.md` for provenance, `CONTRIBUTING.md` for the
 contribution and release flow.
+
+## License and attribution
+
+This package is licensed MIT — the same license as its upstream oh-my-pi
+(https://github.com/can1357/oh-my-pi). The DAP seam and the `debug` tool are
+ported from oh-my-pi's coding-agent debug tooling (MIT License, © Mario Zechner 2025,
+© Can Bölük 2025-2026); the upstream copyright holders are recorded in LICENSE next to
+this package's own notice, and the upstream notice text is reproduced in full in
+THIRD-PARTY-NOTICES.md.
