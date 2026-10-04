@@ -74,13 +74,15 @@ git clone git@github.com:hy-sde/dsh-plugins.git
 cd dsh-plugins
 pnpm install
 
-DEBUG_TGZ="$(cd dsh-tool-debug/packages/tool-debug && pnpm pack --silent --pack-destination /tmp)"
+DEBUG_TGZ="$(cd dsh-tool-debug/packages/tool-debug && pnpm pack --pack-destination /tmp | tail -n 1)"
 dsh plugin --profile web add "$DEBUG_TGZ"
 cd ..
 ```
 
 `prepack` runs the package's clean + build, so the tarball always carries current
-`dist/` for both the dap seam and the tool.
+`dist/` for the tool. The `@hy-sde-org/dsh-dap` seam is a regular dependency
+resolved from npm — it is not inside the tool tarball; pack and add
+`packages/dap` too when validating local dap changes.
 
 ### Verify
 
