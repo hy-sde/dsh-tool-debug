@@ -1,7 +1,7 @@
 {
   "name": "@hy-sde-org/dsh-tool-debug",
   "version": "0.2.1-alpha.2",
-  "description": "The `debug` tool for DeepSeek Harness \u2014 a model-facing Debug Adapter Protocol tool with 28 operations (launch/attach, breakpoints, continue/pause/step, threads/stackTrace/scopes/variables/evaluate, disassembly, memory, modules, output, terminate) over the standalone DAP seam \u2014 a standalone plugin with no upstream harness changes required.",
+  "description": "Model-facing Debug Adapter Protocol debug tool with 28 operations (launch/attach, breakpoints, stepping, threads/stack/scopes/variables/evaluate, disassembly, memory, terminate) over the standalone DAP seam — no harness changes required.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

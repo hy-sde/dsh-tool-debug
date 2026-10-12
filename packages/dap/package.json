@@ -1,7 +1,7 @@
 {
   "name": "@hy-sde-org/dsh-dap",
   "version": "0.2.1-alpha.2",
-  "description": "Debug Adapter Protocol (DAP) capability seam for the DeepSeek Harness \u2014 adapter resolution, and a session manager that launches/attaches, sets breakpoints, steps, lists threads and stack frames, reads scopes and variables, and evaluates expressions through spawned DAP adapters (debugpy, lldb-dap, gdb, dlv, ...).",
+  "description": "Debug Adapter Protocol seam for DeepSeek Harness: adapter resolution plus a session manager that launches/attaches, sets breakpoints, steps, inspects threads/stack/variables, and evaluates expressions via spawned adapters (debugpy, lldb-dap, gdb, dlv).",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
