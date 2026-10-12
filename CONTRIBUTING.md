@@ -6,7 +6,7 @@ monorepo; keep it that way.
 ## Ground rules
 
 - **No new runtime dependencies** for `@hy-sde-org/dsh-dap` beyond its
-  declared peers (`@deepseek-ai/cordis`, `dsh-invariants`,
+  declared peers (`@deepseek-ai/cordis`,
   `dsh-subprocess`), and no new `@deepseek-ai` dependencies for
   `@hy-sde-org/dsh-tool-debug` beyond its declared peers. Runtime Node
   builtins are fine (the host runs Node).

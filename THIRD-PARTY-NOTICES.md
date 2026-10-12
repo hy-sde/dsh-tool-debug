@@ -61,5 +61,5 @@ integrated as peer dependencies, not copied source.
 
 and both packages declare peer dependencies on the published DeepSeek
 Harness packages (`@deepseek-ai/cordis`, `dsh-tools`, `dsh-system-prompt`,
-`dsh-subprocess`, `dsh-subprocess-local`, `dsh-timeout`, `dsh-invariants`),
+`dsh-subprocess`, `dsh-subprocess-local`, `dsh-timeout`),
 all served from the npm registry under their published licenses.

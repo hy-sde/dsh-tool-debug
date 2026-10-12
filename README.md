@@ -35,7 +35,7 @@ model's tool surface and ships it as an installable plugin.
 - Node.js 22.19 or newer (the packages' `engines` floor) with npm and pnpm on `PATH`;
 - a DeepSeek Harness installation including the standard `dsh` CLI — the peer baseline
   is `@deepseek-ai/cordis ~4.0.4` and `@deepseek-ai/dsh-tools`/`dsh-system-prompt`/
-  `dsh-timeout`/`dsh-invariants` `^0.2.0-rc.2`;
+  `dsh-timeout` `^0.2.0-rc.2`;
 - at least one debugger adapter for the languages you want to debug, discovered at
   runtime via `PATH` (debugpy also via `DSH_DEBUGPY_PYTHON`): debugpy
   (`pip install debugpy`) for Python, lldb-dap or gdb for C/C++/Rust, dlv
