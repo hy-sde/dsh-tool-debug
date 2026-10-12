@@ -13,11 +13,12 @@
 # Copy any other rows from the preset you normally use (bash, todo, ask-user,
 # skills, ...) next to these; only the debugging rows are special.
 
+# Required runtime context supplies the current working directory.
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
     text: >-
-      You are a coding agent powered by the {{model}} model. Your working directory is {{cwd}}.
+      You are a coding agent powered by the {{model}} model.
       Debug code with the `debug` tool, which attaches or launches a real
       debugger (debugpy, lldb-dap, gdb, dlv, ...): set source/function/
       instruction/data breakpoints, continue/pause/step, read stack
