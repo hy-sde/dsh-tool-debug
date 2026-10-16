@@ -46,22 +46,22 @@
     }
   },
   "dependencies": {
-    "@hy-sde-org/dsh-dap": "workspace:^",
-    "@deepseek-ai/schemastery": "~3.18.4"
+    "@deepseek-ai/schemastery": "~3.18.4",
+    "@hy-sde-org/dsh-dap": "workspace:^"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.0.5-alpha.1",
-    "@deepseek-ai/dsh-system-prompt": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-timeout": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-tools": "^0.2.1-alpha.2"
+    "@deepseek-ai/cordis": "~4.0.5-alpha.2",
+    "@deepseek-ai/dsh-system-prompt": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-timeout": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-tools": "^0.2.1-alpha.4"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "~4.0.5-alpha.1",
-    "@deepseek-ai/dsh-subprocess": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-subprocess-local": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-system-prompt": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-timeout": "^0.2.1-alpha.2",
-    "@deepseek-ai/dsh-tools": "^0.2.1-alpha.2",
+    "@deepseek-ai/cordis": "~4.0.5-alpha.2",
+    "@deepseek-ai/dsh-subprocess": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-subprocess-local": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-system-prompt": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-timeout": "^0.2.1-alpha.4",
+    "@deepseek-ai/dsh-tools": "^0.2.1-alpha.4",
     "@deepseek-ai/schemastery": "~3.18.4",
     "@hy-sde-org/dsh-dap": "workspace:^",
     "@types/node": "^24.13.3",
