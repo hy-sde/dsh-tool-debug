@@ -57,9 +57,19 @@ integrated as peer dependencies, not copied source.
 | package | license |
 |---|---|
 | @deepseek-ai/schemastery | MIT |
+| @hy-sde-org/effect | MIT (fork, see below) |
 | @hy-sde-org/dsh-dap | MIT (this repo) |
 
 and both packages declare peer dependencies on the published DeepSeek
 Harness packages (`@deepseek-ai/cordis`, `dsh-tools`, `dsh-system-prompt`,
 `dsh-subprocess`, `dsh-subprocess-local`, `dsh-timeout`),
 all served from the npm registry under their published licenses.
+
+## @hy-sde-org/effect
+
+The debug adapter client's request/response transport uses [`@hy-sde-org/effect`](https://www.npmjs.com/package/@hy-sde-org/effect) —
+a trimmed source fork of [`effect`](https://github.com/Effect-TS/effect) `packages/effect`
+at tag `effect@4.0.5` (commit `7f524e25cfb49a71ac39b0f44278d08d40dda5de`). The fork carries
+only the combinator core (`Effect`, `Cause`, `Data`, `Deferred`, `Exit`, `Scheduler` and their
+closed dependency set — 62 of 519 upstream source files) and has zero runtime dependencies.
+MIT License, Copyright (c) 2023 Effectful Technologies Inc.

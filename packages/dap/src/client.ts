@@ -25,7 +25,7 @@ import type {
   DapResponseMessage,
 } from './types.ts'
 import type { SubprocessHandle, SubprocessSpawnSpec } from '@deepseek-ai/dsh-subprocess'
-import { Deferred, Effect, Scheduler } from 'effect'
+import { Deferred, Effect, Scheduler } from '@hy-sde-org/effect'
 
 /** Write surface accepted by the message path (subprocess stdin or a net socket). */
 export interface DapWriteSink {

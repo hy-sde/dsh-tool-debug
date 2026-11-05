@@ -1,6 +1,6 @@
 {
   "name": "@hy-sde-org/dsh-dap",
-  "version": "0.2.1-rc.5",
+  "version": "0.2.1-rc.5.1",
   "description": "Debug Adapter Protocol seam for DeepSeek Harness: adapter resolution plus a session manager that launches/attaches, sets breakpoints, steps, inspects threads/stack/variables, and evaluates expressions via spawned adapters (debugpy, lldb-dap, gdb, dlv).",
   "type": "module",
   "main": "./dist/index.js",
@@ -41,7 +41,7 @@
     "@deepseek-ai/dsh-subprocess": "^0.2.1-rc.5"
   },
   "dependencies": {
-    "effect": "4.0.0-rc.118"
+    "@hy-sde-org/effect": "~4.0.5"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "~4.0.5",
