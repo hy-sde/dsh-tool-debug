@@ -1,6 +1,6 @@
 {
   "name": "@hy-sde-org/dsh-tool-debug",
-  "version": "0.2.1-rc.5",
+  "version": "0.2.2-rc.1",
   "description": "Model-facing Debug Adapter Protocol debug tool with 28 operations (launch/attach, breakpoints, stepping, threads/stack/scopes/variables/evaluate, disassembly, memory, terminate) over the standalone DAP seam — no harness changes required.",
   "type": "module",
   "main": "./dist/index.js",
@@ -46,27 +46,28 @@
     }
   },
   "dependencies": {
-    "@deepseek-ai/schemastery": "~3.18.5",
+    "@deepseek-ai/schemastery": "~3.19.0",
     "@hy-sde-org/dsh-dap": "workspace:^"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "~4.0.5",
-    "@deepseek-ai/dsh-system-prompt": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-timeout": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-tools": "^0.2.1-rc.5"
+    "@deepseek-ai/cordis": "~4.1.0",
+    "@deepseek-ai/dsh-system-prompt": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-timeout": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-tools": "^0.2.2-rc.1"
   },
   "devDependencies": {
-    "@deepseek-ai/cordis": "~4.0.5",
-    "@deepseek-ai/dsh-subprocess": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-subprocess-local": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-system-prompt": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-timeout": "^0.2.1-rc.5",
-    "@deepseek-ai/dsh-tools": "^0.2.1-rc.5",
-    "@deepseek-ai/schemastery": "~3.18.5",
+    "@deepseek-ai/cordis": "~4.1.0",
+    "@deepseek-ai/dsh-subprocess": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-subprocess-local": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-system-prompt": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-timeout": "^0.2.2-rc.1",
+    "@deepseek-ai/dsh-tools": "^0.2.2-rc.1",
+    "@deepseek-ai/schemastery": "~3.19.0",
     "@hy-sde-org/dsh-dap": "workspace:^",
     "@types/node": "^24.13.3",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.7"
+    "vitest": "^3.2.7",
+    "@deepseek-ai/dsh-tool-executor-native": "^0.2.2-rc.1"
   },
   "keywords": [
     "deepseek",
